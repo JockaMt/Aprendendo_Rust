@@ -1,0 +1,10 @@
+[package]
+name = "Aprendendo_Rust"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+
+[[bin]]
+name = "Aprendendo_Rust"
+path = "main.rs"
