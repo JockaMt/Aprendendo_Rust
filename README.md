@@ -107,3 +107,53 @@ _Ao contrário de `const`, `static` pode ser mutável, mas só pode ser definido
         Erro(String),
     }
     ```
+
+### Armazenamento e utilização das variáveis
+
+Primeiramente queria dizer que as variáveis em rust são muito egoístas — elas gostam de deixar tudo claro, principalmente em relação à posse (ownership) e tempo de vida.
+
+Em Rust, o armazenamento das variáveis na memória ocorre principalmente em três regiões: stack (pilha), heap, e área estática.
+
+**Stack** (pilha): é usada para valores cujo tamanho é conhecido em tempo de compilação e que não precisam de alocação dinâmica. Exemplos:
+
+- Números (i32, f64 etc.)
+
+- Tuplas e arrays com tamanho fixo
+
+- Structs compostas apenas por tipos com tamanho fixo
+
+**Heap**: usada para dados com tamanho variável ou que precisam viver além do escopo onde foram criados. A alocação é feita dinamicamente, e o gerenciamento de memória ocorre via ownership e borrowing (sem garbage collector). Exemplos:
+
+- String (alocada dinamicamente)
+
+- Vec<T> (vetores de tamanho dinâmico)
+
+- Tipos como Box<T> e Rc<T>
+
+**Área estática** (static): usada para variáveis globais de tempo de vida 'static, ou seja, que vivem por toda a duração do programa. Variáveis marcadas como static são armazenadas nessa área, assim como literais de string.
+
+```rust
+static PI: f64 = 3.1415; // armazenado na área estática
+
+fn main() {
+    let x = 42; // empilhado (stack)
+    let s = String::from("Olá"); // parte dos dados está no heap
+}
+```
+
+Rust te obriga a lidar com esses detalhes para evitar vazamentos de memória e erros de concorrência. Por isso, cada variável tem um dono, e você precisa deixá-lo claro no código.
+
+#### Cause briga entre variáveis:
+
+Se você definir uma variável de tamanho variável, e atribuir o valor dela a outra variável, a variável original vai ficar muito zangada.
+
+```rust
+let item_de_joao = "bicicleta"
+let item_de_maria = item_de_joao
+
+println!("{}", item_de_joao); // ❌ Erro: valor movido
+```
+
+É basicamente isso, se uma pessoa tem uma bicicleta e dá essa bicicleta para outra pessoa, a pessoa inicial não tem mais uma bicicleta.
+
+~~rust é bizarro~~
